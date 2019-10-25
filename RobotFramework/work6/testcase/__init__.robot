@@ -1,4 +1,5 @@
 *** Settings ***
-Resource  rclib/resourse.robot
-Suite Setup  setupBrower
-Suite Teardown  closeBrower
+Library  pylib.Resource.WebOpAdmin
+Variables  cfg.py
+Suite Setup  setupWebTest   ${url}
+Suite Teardown  tearDownWebTest
