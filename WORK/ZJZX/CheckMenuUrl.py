@@ -1,7 +1,5 @@
 #本用例用于确认菜单请求是否均返回200状态码
 from pymssql import *
-import time
-from ZJZX.ToolClass.LoginClass import *
 
 
 class CheckMenuUrl:

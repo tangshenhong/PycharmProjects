@@ -2,7 +2,6 @@
 '''
 本用例用于招标代理业务测试  接口测试
 '''
-from ZJZX.ToolClass.LoginClass import *
 url = 'http://120.76.247.31:1607'
 #登录操作
 login=LoginClass()

@@ -6,7 +6,9 @@
 原文为mysql数据库：https://blog.csdn.net/qq282881515/article/details/70638517
 '''
 
-# -----------------------------------------------本用例用于知识竞赛系统插入院校、团队、人员数据
+'''
+本用例用于进行知识竞赛的数据初始化操作，包括添加院校、团队、人员、考生安排等操作
+'''
 import pymssql
 import time
 from random import randint
@@ -72,15 +74,16 @@ conn_object.execute_sql(sql_team,teamValues)
     #获取所有团队
 team_list=conn_object.execute_sql("SELECT SchoolID,TeamID FROM tbSigTeam where TeamName LIKE '%tsh团队_%' order by TeamID")
 for idx,team in enumerate(team_list):
-    personnelValues.append((team[1], team[0], f'考生编号{idx + 1}', 'E10ADC3949BA59ABBE56E057F20F883E', f'tsh考生_{idx + 1}', 0,
+    personnelValues.append((team[1], team[0], f'考生编号{idx + 1}', 'E10ADC3949BA59ABBE56E057F20F883E', f'tsh_{idx + 1}', 0,
                             '15741253650', '123@123.com', '3504261990', f'专业{idx + 1}', '/Content/img/noImg.png', 0,
                             f'备注{idx + 1}', 2, timefield, timefield, 1, '123456'))
 conn_object.execute_sql(sql_personnel,personnelValues)
-#----------------------------------------插入考生安排
+#----------------------------------------插入考生安排，安排到考场“tsh考场”
     #获取所有考生账号
-person_list=conn_object.execute_sql("SELECT PersonnelID FROM tbSigTeamPersonnel where IsAccount=1 and TrueName LIKE'%tsh考生_%' AND PersonnelID NOT IN(SELECT PersonnelID from tbKCPersonnel)")
+person_list=conn_object.execute_sql("SELECT PersonnelID FROM tbSigTeamPersonnel where IsAccount=1 and TrueName LIKE'%tsh_%' AND PersonnelID NOT IN(SELECT PersonnelID from tbKCPersonnel)")
 for person in person_list:
     KCPersonnelValues.append((36,person[0],'2019-10-22 12:00:00.000',0,None,2,'2019-10-22 17:09:38.353',None))
+    # KCPersonnelValues.append((1, person[0], '2019-10-22 12:00:00.000', 0, None, 2, '2019-10-22 17:09:38.353', None))
 conn_object.execute_sql(sql_KCPersonnel,KCPersonnelValues)
 
 
