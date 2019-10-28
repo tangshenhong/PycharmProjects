@@ -52,7 +52,7 @@ costclassid_list=conn_object.execute_sql('SELECT ClassID from tbProClass where I
 #添加4个收件登记模块的测试数据
 valuelist=[]
 for type in range(1):#0普通件，1 重大件，2 量价件,3财审件
-    for i in range(1, 3001):
+    for i in range(1, 1001):
         timee = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         # 随机抽取项目类别id
         classnum = randint(0, len(classid_list) - 1)
@@ -61,7 +61,7 @@ for type in range(1):#0普通件，1 重大件，2 量价件,3财审件
         costnum = randint(0, len(costclassid_list) - 1)
         costid = costclassid_list[costnum][0]
         if type==0:
-            proname='1010test普通登记'
+            proname='普通登记'
         elif type==1:
             proname = '重大基建'
         elif type==2:
