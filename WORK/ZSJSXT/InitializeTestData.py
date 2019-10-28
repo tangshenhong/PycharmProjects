@@ -11,7 +11,6 @@
 '''
 import pymssql
 import time
-from random import randint
 class ConnectDataBase:
     def __init__(self,server,user,password,database):
         self.server=server
@@ -27,12 +26,14 @@ class ConnectDataBase:
             raise (NameError,'连接数据库失败')
         else:
             return cursor
-    #插入或者查询数据
-    def execute_sql(self,sql,valueList=None):
+    #插入、删除或者查询数据
+    def execute_sql(self,sql,valueList=None,isDele=False):
         cursor=self.get_connection()
         if valueList:#插入数据
             cursor.executemany(sql, valueList)
             self.conn.close()
+        elif isDele==True:
+            cursor.execute(sql)
         else:#查询数据
             cursor.execute(sql)
             results = cursor.fetchall()
@@ -47,6 +48,16 @@ password='devuser'
 database='ZSJSXT'
 #----------------------------------------sql语句
 conn_object=ConnectDataBase(server,user,password,database)
+#-----------------------------------------数据初始化
+conn_object.execute_sql('''DELETE from tbTotalScore where PersonnelID IN (SELECT PersonnelID from tbSigTeamPersonnel where TrueName like '%tsh_%')''',isDele=True)
+conn_object.execute_sql('''DELETE FROM tbDTScoreDetail where DTScoreID IN(SELECT tbDTScore.DTScoreID FROM tbDTScore where PersonnelID IN (SELECT tbDTScore.PersonnelID from tbSigTeamPersonnel where TrueName like '%tsh_%'))''',isDele=True)
+conn_object.execute_sql('''DELETE FROM tbDTScore where PersonnelID IN (SELECT PersonnelID from tbSigTeamPersonnel where TrueName like '%tsh_%')''',isDele=True)
+conn_object.execute_sql('''DELETE FROM tbSJScore WHERE PersonnelID IN (SELECT PersonnelID from tbSigTeamPersonnel where TrueName like '%tsh_%')''',isDele=True)
+conn_object.execute_sql('''DELETE FROM tbKCPersonnel WHERE PersonnelID IN(SELECT PersonnelID FROM tbSigTeamPersonnel where IsAccount=1 and TrueName LIKE'%tsh_%')''',isDele=True)
+conn_object.execute_sql('''delete from tbSigTeamPersonnel where TrueName like '%tsh_%\'''',isDele=True)
+conn_object.execute_sql('''delete FROM tbSigTeam where TeamName LIKE '%tsh团队_%\'''',isDele=True)
+conn_object.execute_sql('''delete FROM tbSigSchool where SchoolName LIKE '%tsh院校_%\'''',isDele=True)
+#-----------------------------------------
 timefield = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 sql_school = '''INSERT INTO tbSigSchool(SchoolNO,SchoolName,PCAID,SchoolAddress,ClassID,Remark,OperationUserID,AddTime,UpdateTime) 
             VALUES(%s,%s,%d,%s,%d,%s,%d,%s,%s)'''
@@ -61,7 +72,7 @@ teamValues=[]
 personnelValues=[]
 KCPersonnelValues=[]
 #----------------------------------------插入院校
-for i in range(1, 241):
+for i in range(1, 242):
     schoolValues.append((f'院校编码{i}', f'tsh院校_{i}', 151, f'院校地址{i}', 52, f'备注{i}', 2, timefield, timefield))
 conn_object.execute_sql(sql_school,schoolValues)
 #----------------------------------------插入团队
