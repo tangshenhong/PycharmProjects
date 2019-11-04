@@ -323,7 +323,7 @@ try:
     # 进行收件登记、审核操作
     proname=mytasks.ProInfoOrders()
     #进行合同签订操作
-    mytasks.SignContract(proname,contractType=2)
+    mytasks.SignContract(proname,contractType=1)
     # #任务分配操作
     # mytasks.taskAllocation(proname)
 
